@@ -20,7 +20,9 @@ plt.switch_backend('agg')
 # /Volumes/Yuan-T7/FAU_models/checkpoint_epoch_init.pth
 
 parser = argparse.ArgumentParser(description='DEMO')
-parser.add_argument('--mpath', '-p', default='/Volumes/Yuan-T7/FAU_models/models_r10/checkpoint_epoch69.pth', type=str, 
+# parser.add_argument('--mpath', '-p', default='/Users/desa/research/facialexpression/checkpoint_epoch_init.pth', type=str, 
+#                    help='the path of model')
+parser.add_argument('--mpath', '-p', default='/Users/desa/research/facialexpression/checkpoint_epoch69.pth', type=str, 
                     help='the path of model')
 parser.add_argument('--scale', '-s', default=80, type=int, 
                     help='determine the face crop size')
@@ -57,12 +59,17 @@ def test_model(model, crop_frame, device):
 def plot_bar(au_scores, title):
     labels = ['AU4', 'AU6', 'AU7', 'AU10', 'AU12', 'AU20', 'AU25', 'AU26', 'AU43']
     values = au_scores[1:]
+    ############ Recalibrating VDS 
+    values[4]=values[4]*2
+    values[2]=values[2]*3
+    ############ Recalibrating VDS
     fig, ax = plt.subplots(figsize=(10, 10.8))
     ax.barh(labels, values)
     #ax.set_xlabel('Values')
     #ax.set_ylabel('Labels')
     ax.set_title(title + ' PSPI {:.2f}/16'.format(au_scores[0]), fontsize=20)
-    ax.set_xlim([0, 5])
+    ## ax.set_xlim([0, 5])
+    ax.set_xlim([0, 2])
     canvas = FigureCanvasAgg(fig)
     canvas.draw()
     plot = np.array(canvas.renderer.buffer_rgba())
